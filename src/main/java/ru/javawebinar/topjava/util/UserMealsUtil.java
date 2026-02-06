@@ -51,6 +51,11 @@ public class UserMealsUtil {
 
     public static List<UserMealWithExcess> filteredByStreams(
             List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
+        class Accumulator {
+            Map<LocalDate, DayState> daysStates = new HashMap<>();
+            List<UserMealWithExcess> mealsWithExcess = new ArrayList<>();
+        }
+        
         return meals.stream()
                 .collect(Collector.of(
                         Accumulator::new,
