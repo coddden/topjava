@@ -11,7 +11,7 @@
 		<h3><a href="index.html">Home</a></h3>
 		<hr>
 		<h2>Meals</h2>
-		<h3><a href="mealForm.jsp">Add Meal</a></h3>
+		<h3><a href="meals?action=mealForm">Add Meal</a></h3>
 		<table>
 			<tr>
 	   			<td>Date</td>
