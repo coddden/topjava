@@ -24,12 +24,12 @@ public class MealsUtil {
     }
 
     private static List<MealTo> filteredByStreams(
-            List<Meal> meals, int caloriesPerDay, Predicate<Meal> filter) {
+            List<Meal> meals, int caloriesPerDay, Predicate<Meal> predicate) {
         Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
                 .collect(
                         Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories)));
         return meals.stream()
-                .filter(meal -> filter.test(meal))
+                .filter(predicate)
                 .map(meal -> createTo(meal, caloriesSumByDate.get(meal.getDate()) > caloriesPerDay))
                 .collect(Collectors.toList());
     }
