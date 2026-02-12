@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import ru.javawebinar.topjava.model.Meal;
 
-public class MealStorageInMemory implements MealStorage {
+public class InMemoryMealStorage implements MealStorage {
     
     private Map<Integer, Meal> meals = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
@@ -15,13 +15,16 @@ public class MealStorageInMemory implements MealStorage {
     @Override
     public Meal save(Meal meal) {
         Integer id = meal.getId();
-        if (id != null) {
+        if (id == null) {
+            meal.setId(counter.incrementAndGet());
             meals.put(meal.getId(), meal);
-            return null;
+            return meal;
         }
-        meal.setId(counter.incrementAndGet());
-        meals.put(meal.getId(), meal);
-        return meal;
+        if (id != null && meals.containsKey(id)) {
+            meals.put(id, meal);
+            return meal;
+        }
+        return null;
     }
     
     @Override
