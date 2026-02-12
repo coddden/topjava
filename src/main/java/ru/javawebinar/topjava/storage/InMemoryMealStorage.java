@@ -20,7 +20,7 @@ public class InMemoryMealStorage implements MealStorage {
             meals.put(meal.getId(), meal);
             return meal;
         }
-        return meals.replace(id, meal) == null ? null : meals.get(id);
+        return meals.computeIfPresent(id, (k, oldMeal) -> meal);
     }
     
     @Override
