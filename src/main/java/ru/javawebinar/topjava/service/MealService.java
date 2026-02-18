@@ -24,30 +24,31 @@ public class MealService {
         this.repository = repository;
     }
     
-    public Meal create(Meal meal) {
-        Meal savedMeal = repository.save(meal);
+    public Meal create(int userId, Meal meal) {
+        meal.setUserId(userId);
+        Meal savedMeal = repository.save(userId, meal);
         return checkNotFound(savedMeal, meal.getId());
     }
     
-    public List<MealTo> getAll(int userId) {
+    public List<MealTo> getAll(int userId, int calories) {
         Collection<Meal> allMeals = repository.getAll(userId);
         if (!allMeals.isEmpty()) {
-            return MealsUtil.getTos(allMeals, MealsUtil.DEFAULT_CALORIES_PER_DAY);
+            return MealsUtil.getTos(allMeals, calories);
         }
         return Collections.emptyList();
     }
     
-    public List<MealTo> getAll(
-            int userId, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        Collection<Meal> allMeals = repository.getAll(userId, startDate, endDate);
+    public List<MealTo> getAllFiltered(int userId, int calories,
+            LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+        Collection<Meal> allMeals = repository.getAllFiltered(userId, startDate, endDate);
         if (!allMeals.isEmpty()) {
-            return MealsUtil.getFilteredTos(allMeals, MealsUtil.DEFAULT_CALORIES_PER_DAY, startTime, endTime);
+            return MealsUtil.getFilteredTos(allMeals, calories, startTime, endTime);
         }
         return Collections.emptyList();
     }
     
-    public void update(Meal meal) {
-        checkNotFound(repository.save(meal), meal.getId());
+    public void update(int userId, Meal meal) {
+        checkNotFound(repository.save(userId, meal), meal.getId());
     }
     
     public void delete(int userId, int id) {

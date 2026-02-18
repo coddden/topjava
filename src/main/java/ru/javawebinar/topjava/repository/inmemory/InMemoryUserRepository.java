@@ -27,7 +27,7 @@ public class InMemoryUserRepository implements UserRepository {
             userMap.put(user.getId(), user);
             return user;
         }
-        return userMap.computeIfPresent(user.getId(), (id, oldMeal) -> user);
+        return userMap.computeIfPresent(user.getId(), (id, oldUser) -> user);
     }
     
     @Override
@@ -49,7 +49,7 @@ public class InMemoryUserRepository implements UserRepository {
     public List<User> getAll() {
         log.info("getAll");
         return userMap.values().stream()
-                .sorted(Comparator.comparing(User::getName))
+                .sorted(Comparator.comparing(User::getName).thenComparing(User::getEmail))
                 .collect(Collectors.toList());
     }
     

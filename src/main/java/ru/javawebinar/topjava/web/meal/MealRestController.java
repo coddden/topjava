@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.web.SecurityUtil;
 
 @Controller
 public class MealRestController {
@@ -22,25 +23,23 @@ public class MealRestController {
     
     public Meal create(Meal meal) {
         log.info("create {}", meal);
-        meal.setUserId(authUserId());
-        return service.create(meal);
+        return service.create(authUserId(), meal);
     }
     
     public List<MealTo> getAll() {
         log.info("getAll");
-        return service.getAll(authUserId());
+        return service.getAll(authUserId(), SecurityUtil.authUserCaloriesPerDay());
     }
     
-    public List<MealTo> getAll(
+    public List<MealTo> getAllFiltered(
             LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        log.info("getAll filtered by date");
-        return service.getAll(
-                authUserId(), startDate, startTime, endDate, endTime);
+        log.info("getAll filtered");
+        return service.getAllFiltered(authUserId(), SecurityUtil.authUserCaloriesPerDay(), startDate, startTime, endDate, endTime);
     }
     
     public void update(Meal meal) {
-        log.info("update {} with id={}", meal, meal.getId());
-        service.update(meal);
+        log.info("update {} with id={}", meal, authUserId());
+        service.update(authUserId(), meal);
     }
     
     public void delete(int id) {
