@@ -49,12 +49,12 @@ public class InMemoryMealRepository implements MealRepository {
     
     @Override
     public List<Meal> getAll(int userId) {
-        return getAllFiltered(userId, null, null);
+        return doGetAll(userId, null, null);
     }
     
     @Override
-    public List<Meal> getAll(int userId, LocalDate startDate, LocalDate endDate) {
-        return getAllFiltered(userId, startDate, endDate);
+    public List<Meal> getAllFiltered(int userId, LocalDate startDate, LocalDate endDate) {
+        return doGetAll(userId, startDate, endDate);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class InMemoryMealRepository implements MealRepository {
         return mealsMap != null && mealsMap.remove(id) != null;
     }
     
-    private List<Meal> getAllFiltered(int userId, LocalDate startDate, LocalDate endDate) {
+    private List<Meal> doGetAll(int userId, LocalDate startDate, LocalDate endDate) {
         log.info("getAll filtered");
         Map<Integer, Meal> mealsMap = usersMealsMap.get(userId);
         return mealsMap.isEmpty() ?
