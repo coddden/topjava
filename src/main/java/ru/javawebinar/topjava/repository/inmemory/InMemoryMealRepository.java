@@ -1,7 +1,6 @@
 package ru.javawebinar.topjava.repository.inmemory;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -14,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 @Repository
@@ -48,22 +48,13 @@ public class InMemoryMealRepository implements MealRepository {
     }
     
     @Override
-    public Collection<Meal> getAll(int userId) {
+    public List<Meal> getAll(int userId) {
         return getAllFiltered(userId, null, null);
     }
-
+    
     @Override
-    public List<Meal> getAllFiltered(int userId, LocalDate startDate, LocalDate endDate) {
-        log.info("getAll filtered by date");
-        Map<Integer, Meal> mealsMap = usersMealsMap.get(userId);
-        return mealsMap == null ?
-                Collections.emptyList() :
-                mealsMap.values().stream()
-                    .filter(meal ->
-                        (startDate == null || !meal.getDate().isBefore(startDate)) &&
-                        (endDate == null || !meal.getDate().isAfter(endDate)))
-                    .sorted(Comparator.comparing(Meal::getDate).reversed())
-                    .collect(Collectors.toList());
+    public List<Meal> getAll(int userId, LocalDate startDate, LocalDate endDate) {
+        return getAllFiltered(userId, startDate, endDate);
     }
 
     @Override
@@ -71,5 +62,16 @@ public class InMemoryMealRepository implements MealRepository {
         log.info("delete {}", id);
         Map<Integer, Meal> mealsMap = usersMealsMap.get(userId);
         return mealsMap != null && mealsMap.remove(id) != null;
+    }
+    
+    private List<Meal> getAllFiltered(int userId, LocalDate startDate, LocalDate endDate) {
+        log.info("getAll filtered");
+        Map<Integer, Meal> mealsMap = usersMealsMap.get(userId);
+        return mealsMap.isEmpty() ?
+                Collections.emptyList() :
+                mealsMap.values().stream()
+                    .filter(meal -> DateTimeUtil.isWithinDateRange(meal, startDate, endDate))
+                    .sorted(Comparator.comparing(Meal::getDate).reversed())
+                    .collect(Collectors.toList());
     }
 }

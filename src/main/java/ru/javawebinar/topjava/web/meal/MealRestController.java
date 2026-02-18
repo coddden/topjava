@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.web.meal;
 
+import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkIsNew;
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 import java.time.LocalDate;
@@ -23,6 +25,7 @@ public class MealRestController {
     
     public Meal create(Meal meal) {
         log.info("create {}", meal);
+        checkIsNew(meal);
         return service.create(authUserId(), meal);
     }
     
@@ -31,14 +34,16 @@ public class MealRestController {
         return service.getAll(authUserId(), SecurityUtil.authUserCaloriesPerDay());
     }
     
-    public List<MealTo> getAllFiltered(
+    public List<MealTo> getAll(
             LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         log.info("getAll filtered");
-        return service.getAllFiltered(authUserId(), SecurityUtil.authUserCaloriesPerDay(), startDate, startTime, endDate, endTime);
+        return service.getAll(authUserId(), SecurityUtil.authUserCaloriesPerDay(),
+                startDate, startTime, endDate, endTime);
     }
     
-    public void update(Meal meal) {
-        log.info("update {} with id={}", meal, authUserId());
+    public void update(Meal meal, int id) {
+        log.info("update {} with id={}", meal, id);
+        assureIdConsistent(meal, id);
         service.update(authUserId(), meal);
     }
     

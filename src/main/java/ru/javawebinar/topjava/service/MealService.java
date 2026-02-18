@@ -25,9 +25,7 @@ public class MealService {
     }
     
     public Meal create(int userId, Meal meal) {
-        meal.setUserId(userId);
-        Meal savedMeal = repository.save(userId, meal);
-        return checkNotFound(savedMeal, meal.getId());
+        return repository.save(userId, meal);
     }
     
     public List<MealTo> getAll(int userId, int calories) {
@@ -38,9 +36,9 @@ public class MealService {
         return Collections.emptyList();
     }
     
-    public List<MealTo> getAllFiltered(int userId, int calories,
+    public List<MealTo> getAll(int userId, int calories,
             LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        Collection<Meal> allMeals = repository.getAllFiltered(userId, startDate, endDate);
+        Collection<Meal> allMeals = repository.getAll(userId, startDate, endDate);
         if (!allMeals.isEmpty()) {
             return MealsUtil.getFilteredTos(allMeals, calories, startTime, endTime);
         }
