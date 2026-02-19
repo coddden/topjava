@@ -28,6 +28,10 @@ public class MealService {
         return repository.save(userId, meal);
     }
     
+    public Meal get(int userId, int id) {
+        return checkNotFound(repository.get(userId, id), id);
+    }
+    
     public List<MealTo> getAll(int userId, int calories) {
         Collection<Meal> allMeals = repository.getAll(userId);
         if (!allMeals.isEmpty()) {

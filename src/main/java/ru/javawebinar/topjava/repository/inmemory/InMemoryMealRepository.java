@@ -67,11 +67,11 @@ public class InMemoryMealRepository implements MealRepository {
     private List<Meal> doGetAll(int userId, LocalDate startDate, LocalDate endDate) {
         log.info("getAll filtered");
         Map<Integer, Meal> mealsMap = usersMealsMap.get(userId);
-        return mealsMap.isEmpty() ?
+        return mealsMap == null ?
                 Collections.emptyList() :
-                mealsMap.values().stream()
-                    .filter(meal -> DateTimeUtil.isWithinDateRange(meal, startDate, endDate))
-                    .sorted(Comparator.comparing(Meal::getDate).reversed())
-                    .collect(Collectors.toList());
+                    mealsMap.values().stream()
+                        .filter(meal -> DateTimeUtil.isWithinDateRange(meal, startDate, endDate))
+                        .sorted(Comparator.comparing(Meal::getDate).reversed())
+                        .collect(Collectors.toList());
     }
 }
