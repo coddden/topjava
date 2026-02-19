@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.repository.inmemory;
 
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
+
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,7 +26,7 @@ public class InMemoryMealRepository implements MealRepository {
     private final AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.meals.forEach(meal -> save(1, meal));
+        MealsUtil.meals.forEach(meal -> save(authUserId(), meal));
     }
 
     @Override
