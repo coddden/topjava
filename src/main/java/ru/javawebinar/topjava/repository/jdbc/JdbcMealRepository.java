@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.util.Util;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -44,7 +43,7 @@ public class JdbcMealRepository implements MealRepository {
             Number newKey = insertMeal.executeAndReturnKey(map);
             meal.setId(newKey.intValue());
         } else if (namedParameterJdbcTemplate.update(
-                "UPDATE meals SET date_time=:dateTime, description=:description, calories=:calories" +
+                "UPDATE meals SET date_time=:dateTime, description=:description, calories=:calories " +
                         "WHERE id=:id AND user_id=:userId", map) == 0) {
             return null;
         }
@@ -71,6 +70,11 @@ public class JdbcMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
-        return null;
+        return jdbcTemplate.query(
+                "   SELECT * FROM meals" +
+                "    WHERE user_id=?" +
+                "      AND date_time >= ?" +
+                "      AND date_time < ?" +
+                " ORDER BY date_time DESC", ROW_MAPPER, userId, startDateTime, endDateTime);
     }
 }
