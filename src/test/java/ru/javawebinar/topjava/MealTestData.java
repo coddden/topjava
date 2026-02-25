@@ -40,12 +40,7 @@ public class MealTestData {
     }
     
     public static Meal getUpdated() {
-        Meal updated = getNew();
-        updated.setId(MEAL_ID);
-        updated.setDateTime(LocalDateTime.of(2022, Month.FEBRUARY, 2, 2, 0));
-        updated.setDescription("Updated");
-        updated.setCalories(222);
-        return updated;
+        return new Meal(MEAL_ID, LocalDateTime.of(2022, Month.FEBRUARY, 2, 2, 0), "Updated", 222);
     }
     
     public static void assertMatch(Meal actual, Meal expected) {
