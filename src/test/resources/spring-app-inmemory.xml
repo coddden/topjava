@@ -2,17 +2,10 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:annotation-config/>
+    <context:component-scan base-package="ru.javawebinar.**.repository.inmemory"/>
 
-    <bean class="ru.javawebinar.topjava.repository.inmemory.InMemoryUserRepository" id="inmemoryUserRepository"/>
-    <bean class="ru.javawebinar.topjava.service.UserService" id="userService">
-        <constructor-arg ref="inmemoryUserRepository"/>
-    </bean>
-    <bean class="ru.javawebinar.topjava.web.user.AdminRestController" id="adminRestController"/>
+    <context:component-scan base-package="ru.javawebinar.**.service"/>
+
+    <context:component-scan base-package="ru.javawebinar.**.web"/>
     
-    <bean class="ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepository" id="inMemoryMealRepository"/>
-    <bean class="ru.javawebinar.topjava.service.MealService" id="mealService">
-        <constructor-arg ref="inMemoryMealRepository"/>
-    </bean>
-    <bean class="ru.javawebinar.topjava.web.meal.MealRestController" id="mealRestController"/>
 </beans>
