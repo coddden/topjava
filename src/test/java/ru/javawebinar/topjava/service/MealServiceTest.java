@@ -20,7 +20,9 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 @ContextConfiguration({
-        "classpath:spring/spring-app-jdbc.xml",
+        "classpath:spring/spring-service.xml",
+        "classpath:spring/spring-web.xml",
+        "classpath:spring/spring-repository-jdbc.xml",
         "classpath:spring/spring-db.xml"
 })
 @RunWith(SpringRunner.class)
@@ -100,9 +102,10 @@ public class MealServiceTest {
 
     @Test
     public void create() {
-        Meal newMeal = MealTestData.getNew();
-        Meal created = service.create(newMeal, UserTestData.USER_ID);
+        Meal meal = MealTestData.getNew();
+        Meal created = service.create(meal, UserTestData.USER_ID);
         Integer newId = created.getId();
+        Meal newMeal = MealTestData.getNew();
         newMeal.setId(newId);
         MealTestData.assertMatch(service.get(newId, UserTestData.USER_ID), newMeal);
     }
