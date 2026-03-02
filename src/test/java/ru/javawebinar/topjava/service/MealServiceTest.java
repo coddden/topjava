@@ -3,8 +3,8 @@ package ru.javawebinar.topjava.service;
 import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runners.model.Statement;
+import org.junit.rules.Stopwatch;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,15 +14,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -35,33 +32,35 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-@Transactional
+
 public class MealServiceTest {
     
     @Autowired
     private MealService service;
     private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
-    private static Map<String, Long> summary = new HashMap<>();
+    private static StringBuilder summary = new StringBuilder();
     
     @Rule
-    public TestRule watchTime = (base, description) -> new Statement() {
+    public Stopwatch stopwatch = new Stopwatch() {
+
         @Override
-        public void evaluate() throws Throwable {
-            long start = System.currentTimeMillis();
-            try {
-                base.evaluate();
-            } finally {
-                long end = System.currentTimeMillis();
-                log.info("Test '{}' took {} ms", description.getMethodName(), (end - start));
-                summary.put(description.getMethodName(), end - start);
-            }
+        protected void succeeded(long nanos, Description description) {
+            log.info(description.getMethodName() + " succeeded in " + nanos / 1000000 + "ms");
+            summary.append(
+                    String.format("%-25s succeeded %5dms%n", description.getMethodName(), nanos / 1000000));
+        }
+
+        @Override
+        protected void failed(long nanos, Throwable e, Description description) {
+            log.info(description.getMethodName() + " failed in " + nanos / 1000000 + "ms");
+            summary.append(
+                    String.format("%-25s failed %8dms%n", description.getMethodName(), nanos / 1000000));
         }
     };
     
     @AfterClass
-    public static void printSummary() {
-        System.out.println();
-        summary.forEach((name, time) -> System.out.printf("%-25s - %5dms%n", name, time));
+    public static void logSummary() {
+        log.info("\n\n" + summary.toString());
     }
     
     @Test
