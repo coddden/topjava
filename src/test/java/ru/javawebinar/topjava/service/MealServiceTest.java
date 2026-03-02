@@ -20,6 +20,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -32,7 +33,6 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-
 public class MealServiceTest {
     
     @Autowired
@@ -44,17 +44,10 @@ public class MealServiceTest {
     public Stopwatch stopwatch = new Stopwatch() {
 
         @Override
-        protected void succeeded(long nanos, Description description) {
-            log.info(description.getMethodName() + " succeeded in " + nanos / 1000000 + "ms");
-            summary.append(
-                    String.format("%-25s succeeded %5dms%n", description.getMethodName(), nanos / 1000000));
-        }
-
-        @Override
-        protected void failed(long nanos, Throwable e, Description description) {
-            log.info(description.getMethodName() + " failed in " + nanos / 1000000 + "ms");
-            summary.append(
-                    String.format("%-25s failed %8dms%n", description.getMethodName(), nanos / 1000000));
+        protected void finished(long nanos, Description description) {
+            long timeInMillis = TimeUnit.NANOSECONDS.toMillis(nanos);
+            log.info(timeInMillis + "ms");
+            summary.append(String.format("%-25s - %5dms%n", description.getMethodName(), timeInMillis));
         }
     };
     
