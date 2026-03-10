@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.repository.datajpa;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,9 +12,22 @@ import ru.javawebinar.topjava.model.Meal;
 
 @Transactional(readOnly = true)
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
-    
-    boolean existsByIdAndUserId(int id, int userId);
-    
+
+    @Transactional
+    @Modifying
+    @Query("""
+            UPDATE Meal m
+               SET m.dateTime=:dateTime, m.description=:description, m.calories=:calories
+             WHERE m.id=:id
+               AND m.user.id=:userId
+            """)
+    int update(
+            @Param("id") int id,
+            @Param("userId") int userId,
+            @Param("dateTime") LocalDateTime dateTime,
+            @Param("description") String description,
+            @Param("calories") int calories);
+
     @Transactional
     @Modifying
     @Query("""
@@ -22,7 +36,9 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
              WHERE m.id=:id
                AND m.user.id=:userId
             """)
-    int delete(@Param("id") int id, @Param("userId") int userId);
+    int delete(
+            @Param("id") int id,
+            @Param("userId") int userId);
     
     List<Meal> findAllByUserIdOrderByDateTimeDesc(int userId);
     
