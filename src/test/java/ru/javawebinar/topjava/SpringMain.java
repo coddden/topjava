@@ -17,7 +17,9 @@ public class SpringMain {
     public static void main(String[] args) {
         
         ClassPathXmlApplicationContext appCtx = new ClassPathXmlApplicationContext();
-        appCtx.getEnvironment().setActiveProfiles(Profiles.DATAJPA, Profiles.POSTGRES_DB);
+        appCtx.getEnvironment().setActiveProfiles(
+                Profiles.getActiveDbProfile(),
+                Profiles.REPOSITORY_IMPLEMENTATION);
         appCtx.setConfigLocations("spring/spring-app.xml", "spring/spring-db.xml");
         appCtx.refresh();
         
