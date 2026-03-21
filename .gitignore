@@ -6,3 +6,7 @@ log
 *.patch
 
 
+/.DS_Store
+/.checkstyle
+/.classpath
+/.project
