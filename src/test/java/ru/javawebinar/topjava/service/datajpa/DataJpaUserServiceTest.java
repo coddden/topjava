@@ -3,7 +3,7 @@ package ru.javawebinar.topjava.service.datajpa;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
-import ru.javawebinar.topjava.CacheCleaner;
+import ru.javawebinar.topjava.CacheCleanerServiceTest;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.User;
@@ -14,7 +14,7 @@ import static ru.javawebinar.topjava.Profiles.DATAJPA;
 import static ru.javawebinar.topjava.UserTestData.*;
 
 @ActiveProfiles(DATAJPA)
-public class DataJpaUserServiceTest extends CacheCleaner {
+public class DataJpaUserServiceTest extends CacheCleanerServiceTest {
     @Test
     public void getWithMeals() {
         User user = service.getWithMeals(USER_ID);

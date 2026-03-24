@@ -6,7 +6,7 @@ import org.springframework.cache.CacheManager;
 import ru.javawebinar.topjava.repository.JpaUtil;
 import ru.javawebinar.topjava.service.AbstractUserServiceTest;
 
-public class CacheCleaner extends AbstractUserServiceTest {
+public class CacheCleanerServiceTest extends AbstractUserServiceTest {
     
     @Autowired
     private CacheManager cacheManager;

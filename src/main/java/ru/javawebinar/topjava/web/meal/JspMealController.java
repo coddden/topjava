@@ -1,13 +1,14 @@
-package ru.javawebinar.topjava.web;
+package ru.javawebinar.topjava.web.meal;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
-import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.web.SecurityUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -19,79 +20,68 @@ import java.util.Objects;
 
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
-import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
-import static ru.javawebinar.topjava.util.ValidationUtil.checkIsNew;
 
 @Controller
+@RequestMapping("/meals")
 public class JspMealController extends AbstractMealController {
 
     public JspMealController(MealService service) {
         super(service);
     }
 
-    @GetMapping(value = "/meals", params = "action=delete")
-    public String delete(HttpServletRequest request) {
-        log.info("delete");
-        int id = getId(request);
-        int userId = SecurityUtil.authUserId();
-        service.delete(id, userId);
-        return "redirect:meals";
+    @GetMapping()
+    public String getMeals(Model model) {
+        model.addAttribute("meals", super.getAll());
+        return "meals";
     }
 
-    @GetMapping(value = "/meals", params = "action=create")
-    public String create(Model model) {
-        log.info("create");
+    @GetMapping("/delete")
+    public String delete(HttpServletRequest request) {
+        super.delete(getId(request));
+        return "redirect:/meals";
+    }
+
+    @GetMapping("/create")
+    public String getMealCreateForm(Model model) {
+        log.info("getMealCreateForm");
         Meal meal = new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000);
         model.addAttribute("meal", meal);
+        model.addAttribute("isCreate", true);
         return "mealForm";
     }
 
-    @GetMapping(value = "/meals", params = "action=update")
-    public String update(Model model, HttpServletRequest request) {
-        log.info("update");
-        int id = getId(request);
-        int userId = SecurityUtil.authUserId();
-        Meal meal = service.get(id, userId);
+    @GetMapping("/update")
+    public String getMealUpdateForm(Model model, HttpServletRequest request) {
+        log.info("getMealUpdateForm");
+        Meal meal = service.get(getId(request), SecurityUtil.authUserId());
         model.addAttribute("meal", meal);
         return "mealForm";
     }
 
-    @GetMapping(value = "/meals", params = "action=filter")
+    @GetMapping("/filter")
     public String filter(Model model, HttpServletRequest request) {
         log.info("filter");
         LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
         LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
         LocalTime startTime = parseLocalTime(request.getParameter("startTime"));
         LocalTime endTime = parseLocalTime(request.getParameter("endTime"));
-        model.addAttribute("meals", getBetween(startDate, startTime, endDate, endTime));
+        model.addAttribute("meals", super.getBetween(startDate, startTime, endDate, endTime));
         return "meals";
     }
 
-    @GetMapping("/meals")
-    public String getMeals(Model model) {
-        log.info("meals");
-        int userId = SecurityUtil.authUserId();
-        model.addAttribute("meals",
-                MealsUtil.getTos(service.getAll(userId), SecurityUtil.authUserCaloriesPerDay()));
-        return "meals";
-    }
-
-    @PostMapping("/meals")
+    @PostMapping()
     public String setMeal(HttpServletRequest request) throws IOException {
         request.setCharacterEncoding("UTF-8");
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
-        int userId = SecurityUtil.authUserId();
         if (StringUtils.hasLength(request.getParameter("id"))) {
-            assureIdConsistent(meal, getId(request));
-            service.update(meal, userId);
+            super.update(meal, getId(request));
         } else {
-            checkIsNew(meal);
-            service.create(meal, userId);
+            super.create(meal);
         }
-        return "redirect:meals";
+        return "redirect:/meals";
     }
 
     private int getId(HttpServletRequest request) {

@@ -4,19 +4,14 @@
 
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
-<head>
-    <title>Meal</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
     <h3><a href="index.html">Home</a></h3>
     <hr>
-    <c:set var="title" value="${param.action == 'create' ? 'form.create' : 'form.edit'}"/>
-    <h2><spring:message code="${title}"/></h2>
+    <h2><spring:message code="${isCreate ? 'form.create' : 'form.edit'}"/></h2>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
-    <form method="post" action="meals">
+    <form method="post" action="${pageContext.request.contextPath}/meals">
         <input type="hidden" name="id" value="${meal.id}">
         <dl>
             <dt><spring:message code="form.date"/></dt>
