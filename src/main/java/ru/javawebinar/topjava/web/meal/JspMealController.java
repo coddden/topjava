@@ -70,7 +70,7 @@ public class JspMealController extends AbstractMealController {
     }
 
     @PostMapping()
-    public String setMeal(HttpServletRequest request) throws IOException {
+    public String save(HttpServletRequest request) throws IOException {
         request.setCharacterEncoding("UTF-8");
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),

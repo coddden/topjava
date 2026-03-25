@@ -5,6 +5,8 @@ import org.junit.Rule;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -23,6 +25,9 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
 public abstract class AbstractServiceTest {
+
+    @Autowired
+    protected CacheManager cacheManager;
 
     @ClassRule
     public static ExternalResource summary = TimingRules.SUMMARY;

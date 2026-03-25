@@ -1,12 +1,18 @@
 package ru.javawebinar.topjava.service.jdbc;
 
-import org.springframework.test.annotation.DirtiesContext;
+import org.junit.Before;
 import org.springframework.test.context.ActiveProfiles;
 import ru.javawebinar.topjava.service.AbstractUserServiceTest;
+
+import java.util.Objects;
 
 import static ru.javawebinar.topjava.Profiles.JDBC;
 
 @ActiveProfiles(JDBC)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class JdbcUserServiceTest extends AbstractUserServiceTest {
+
+    @Before
+    public void setup() {
+        Objects.requireNonNull(cacheManager.getCache("users")).clear();
+    }
 }
