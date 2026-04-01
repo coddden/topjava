@@ -12,8 +12,10 @@ public class MealToTestData {
 
     public static final MatcherFactory.Matcher<MealTo> MEALTO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(MealTo.class);
 
-    public static final String START_DATE_TIME = "2020-01-31T09:00:00";
-    public static final String END_DATE_TIME = "2020-01-31T14:00:00";
+    public static final String START_DATE = "2020-01-31";
+    public static final String START_TIME = "09:00:00";
+    public static final String END_DATE = "2020-01-31";
+    public static final String END_TIME = "14:00:00";
 
     public static final MealTo mealTo1 = new MealTo(MEAL1_ID, of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500, false);
     public static final MealTo mealTo2 = new MealTo(MEAL1_ID + 1, of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000, false);
