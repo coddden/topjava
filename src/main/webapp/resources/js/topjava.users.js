@@ -45,3 +45,15 @@ $(function () {
         })
     );
 });
+
+window.enable = function(id, enabled, name) {
+    let row = $("#" + id);
+    row.toggleClass("text-muted", !enabled);
+    $.ajax({
+        type: "POST",
+        url: ctx.ajaxUrl + id + "/enable",
+        data: { enabled: enabled }
+    }).done(function () {
+        successNoty(name + " is " + (enabled ? "active" : "inactive"));
+    });
+}

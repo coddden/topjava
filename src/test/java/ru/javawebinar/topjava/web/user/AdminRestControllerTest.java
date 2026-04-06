@@ -11,7 +11,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -92,5 +92,20 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(USER_WITH_MEALS_MATCHER.contentJson(admin));
+    }
+
+    @Test
+    void enable() throws Exception {
+        perform(MockMvcRequestBuilders.post(REST_URL + USER_ID + "/enable")
+                .param("enabled", "false"))
+                .andExpect(status().isOk())
+                .andDo(print());
+        assertFalse(userService.get(USER_ID).isEnabled());
+
+        perform(MockMvcRequestBuilders.post(REST_URL + USER_ID + "/enable")
+                .param("enabled", "true"))
+                .andExpect(status().isOk())
+                .andDo(print());
+        assertTrue(userService.get(USER_ID).isEnabled());
     }
 }
