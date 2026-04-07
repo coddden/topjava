@@ -49,7 +49,7 @@ function save() {
         data: form.serialize()
     }).done(function () {
         $("#editRow").modal("hide");
-        updateTable();
+        filter();
         successNoty("Saved");
     });
 }
