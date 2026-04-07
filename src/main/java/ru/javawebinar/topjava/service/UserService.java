@@ -57,6 +57,7 @@ public class UserService {
     }
 
     @Transactional
+    @CacheEvict(value = "users", allEntries = true)
     public void enable(int id, boolean enable) {
         User user = get(id);
         user.setEnabled(enable);

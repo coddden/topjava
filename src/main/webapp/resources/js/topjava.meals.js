@@ -39,9 +39,7 @@ $(function () {
 });
 
 function filter() {
-    $.get(ctx.ajaxUrl + "filter", formFilter.serialize(), function (data) {
-        ctx.datatableApi.clear().rows.add(data).draw();
-    });
+    $.get(ctx.ajaxUrl + "filter", formFilter.serialize(), fill);
 }
 
 function resetFilter() {
