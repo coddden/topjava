@@ -43,15 +43,17 @@ function fill(data) {
 }
 
 function save() {
+    let tableType = form.data('table');
     $.ajax({
         type: "POST",
         url: ctx.ajaxUrl,
         data: form.serialize()
     }).done(function () {
         $("#editRow").modal("hide");
-        filter();
+        if (tableType === 'users') updateTable();
+        if (tableType === 'meals') filter();
         successNoty("Saved");
-    });
+    })
 }
 
 let failedNote;

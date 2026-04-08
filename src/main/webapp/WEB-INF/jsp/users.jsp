@@ -38,7 +38,7 @@
                     <td>
                         <input type="checkbox"
                                <c:if test="${user.enabled}">checked</c:if>
-                               onchange="enable(${user.id}, this.checked, '${user.name}')"/>
+                               onclick="enable(${user.id}, this, '${user.name}')"/>
                     </td>
                     <td><fmt:formatDate value="${user.registered}" pattern="dd-MMMM-yyyy"/></td>
                     <td><a><span class="fa fa-pencil"></span></a></td>
@@ -57,7 +57,7 @@
                 <button type="button" class="close" data-dismiss="modal" onclick="closeNoty()">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="detailsForm">
+                <form id="detailsForm" data-table="users">
                     <input type="hidden" id="id" name="id">
 
                     <div class="form-group">

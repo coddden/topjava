@@ -46,14 +46,19 @@ $(function () {
     );
 });
 
-window.enable = function(id, enabled, name) {
+window.enable = function(id, checkbox, name) {
+    let enabled = checkbox.checked;
+    checkbox.checked = !enabled;
     let row = $("#" + id);
-    row.toggleClass("text-muted", !enabled);
     $.ajax({
         type: "POST",
         url: ctx.ajaxUrl + id + "/enable",
         data: { enabled: enabled }
     }).done(function () {
+        checkbox.checked = enabled;
+        row.toggleClass("text-muted", !enabled);
         successNoty(name + " is " + (enabled ? "active" : "inactive"));
+    }).fail(function () {
+        row.toggleClass("text-muted", !(checkbox.checked));
     });
 }
