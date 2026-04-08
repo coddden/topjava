@@ -42,16 +42,14 @@ function fill(data) {
     ctx.datatableApi.clear().rows.add(data).draw();
 }
 
-function save() {
-    let tableType = form.data('table');
+function save(updateFn) {
     $.ajax({
         type: "POST",
         url: ctx.ajaxUrl,
         data: form.serialize()
     }).done(function () {
         $("#editRow").modal("hide");
-        if (tableType === 'users') updateTable();
-        if (tableType === 'meals') filter();
+        updateFn();
         successNoty("Saved");
     })
 }

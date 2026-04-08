@@ -80,7 +80,7 @@
                 <button type="button" class="close" data-dismiss="modal" onclick="closeNoty()">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="detailsForm" data-table="meals">
+                <form id="detailsForm">
                     <input type="hidden" id="id" name="id">
 
                     <div class="form-group">
@@ -107,7 +107,7 @@
                     <span class="fa fa-close"></span>
                     <spring:message code="common.cancel"/>
                 </button>
-                <button type="button" class="btn btn-primary" onclick="save()">
+                <button type="button" class="btn btn-primary" onclick="save(filter)">
                     <span class="fa fa-check"></span>
                     <spring:message code="common.save"/>
                 </button>
