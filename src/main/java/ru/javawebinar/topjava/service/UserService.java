@@ -50,7 +50,7 @@ public class UserService implements UserDetailsService {
 
     public User getByEmail(String email) {
         Assert.notNull(email, "email must not be null");
-        return checkNotFound(repository.getByEmail(email), "email=" + email);
+        return repository.getByEmail(email);
     }
 
     @Cacheable("users")
